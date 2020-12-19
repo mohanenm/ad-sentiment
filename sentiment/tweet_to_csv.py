@@ -1,6 +1,6 @@
 import csv
 import tweepy
-import api_auth
+from sentiment import api_auth
 
 # open the csv file for training Data, I am going to use this for later
 csvFile = open('sentiment_training.csv', 'a')
