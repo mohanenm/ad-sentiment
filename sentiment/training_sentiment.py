@@ -127,13 +127,11 @@ if __name__ == "__main__":
 # actually going ahead and running it:
     classifier = NaiveBayesClassifier.train(train_data)
 
-# writing to files takes time, but it is easier for me and future users
-# in the sense that the ability to view visualize pertinent data at this point is very helpful
 
-    testdata_file = open("Recent_Test_Data.txt", "w")
-    testdata_file.write(str(classify.accuracy(classifier, test_data)))
+   # testdata_file = open("Recent_Test_Data.txt", "w")
+   # testdata_file.write(str(classify.accuracy(classifier, test_data)))
 
-    informative_features_file = open("informative_features.txt", "w")
-    informative_features_file.write(str(classifier.show_most_informative_features(10)))
+   # informative_features_file = open("informative_features.txt", "w")
+   # informative_features_file.write(str(classifier.show_most_informative_features(10)))
 
 # need to make model static here
