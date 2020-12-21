@@ -1,5 +1,5 @@
 import nltk
-from nltk import FreqDist
+from nltk import FreqDist, classify, NaiveBayesClassifier
 from nltk.corpus import twitter_samples, stopwords
 from nltk.tag import pos_tag
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -35,6 +35,7 @@ def lemmatize_sentence(tokens):
         lemmatized_sentence.append(lemmatizer.lemmatize(word, pos))
     return lemmatized_sentence
 
+
 # regex here for similar reasons as lemmatization -->
 # a lot of the data I am getting in does nothing for me
 # I want the simplest version of word to train the model on
@@ -50,7 +51,7 @@ def rmv_noise(tweet_tokens, stop_wrds=()):
     for token, tag in pos_tag(tweet_tokens):
         token = re.sub('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|' \
                        '(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', token)
-        token = re.sub("(@[A-Za-z0-9_]+)", "", token)
+        token = re.sub('(@[A-Za-z0-9_]+)', "", token)
 
         if tag.startswith("NN"):
             pos = 'n'
@@ -80,6 +81,7 @@ for tokens in positive_tweet_tokens:
 for tokens in negative_tweet_tokens:
     negative_cleaned_tokens_list.append(rmv_noise(tokens, stop_wrds))
 
+
 # using nltk here for word density stuff -->
 # I need to get the actual information about the words before I do anything serious with the model here
 
@@ -88,12 +90,44 @@ def grab_all_words(cleaned_tokens_list):
         for token in tokens:
             yield token
 
+
 # this will initalize the actual frequency of all words -->
 # unfortunately they are grabbed as a tuple here, not a dictionary
 # So, Naturally, I have to turn into a dictionary, which is more elegant and fast -->
 # better for models, too!
 pos_words_list = grab_all_words(positive_cleaned_tokens_list)
+neg_words_list = grab_all_words(negative_cleaned_tokens_list)
 freq_dist_pos = FreqDist(pos_words_list)
 
 
+def get_tweets(cleaned_tokens_list):
+    for model_tokens in cleaned_tokens_list:
+        yield dict([token, True] for token in tweet_tokens)
 
+
+# using naive bayes classifier here because it is the one I am most familiar with
+
+positive_dataset = [(tweet_dict, "Positive")
+                    for tweet_dict in pos_words_list]
+
+negative_dataset = [(tweet_dict, "Negative")
+                    for tweet_dict in neg_words_list]
+
+dataset = positive_dataset + negative_dataset
+
+random.shuffle(dataset)
+
+# using a lot of input here, there are optimizations that I am going to push in later
+train_data = dataset[:10000]
+test_data = dataset[10000:]
+
+# actually going ahead and running it:
+classifier = NaiveBayesClassifier.train(train_data)
+
+# writing to files takes time, but it is easier for me and future users
+# in the sense that the ability to view visualize pertinent data at this point is very helpful
+testdata_file = open("Recent_Test_Data.txt", "w")
+testdata_file.write(classify.accuracy(classifier, test_data))
+
+informative_features_file = open("informative_features.txt", "w")
+informative_features_file.write(classifier.show_most_informative_features(10))
