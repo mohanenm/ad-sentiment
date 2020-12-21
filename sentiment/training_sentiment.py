@@ -73,19 +73,19 @@ def get_tweets(cleaned_tokens_list):
 
 if __name__ == "__main__":
 
-# use former function to clean our sample words and  such
+    # use former function to clean our sample words and  such
     positive_tweet_tokens = twitter_samples.tokenized('positive_tweets.json')
     negative_tweet_tokens = twitter_samples.tokenized('negative_tweets.json')
     stop_wrds = stopwords.words('english')
 
-# using nltk.tag for positve markings here
-# using averaged percepton tagger for token context within sentence
+    # using nltk.tag for positve markings here
+    # using averaged percepton tagger for token context within sentence
 
     positive_tweets = twitter_samples.strings('positive_tweets.json')
     negative_tweets = twitter_samples.strings('negative_tweets.json')
     text = twitter_samples.strings('tweets.20150430-223406.json')
-# grabing a little data at first, for the purpose of visualizing it.
-# Ultimatly training will happen in a larger context
+    # grabing a little data at first, for the purpose of visualizing it.
+    # Ultimatly training will happen in a larger context
     tweet_tokens = twitter_samples.tokenized('positive_tweets.json')[0:1]
 
     positive_cleaned_tokens_list = []
@@ -96,12 +96,12 @@ if __name__ == "__main__":
 
     for tokens in negative_tweet_tokens:
         negative_cleaned_tokens_list.append(rmv_noise(tokens, stop_wrds))
-# using naive bayes classifier here because it is the one I am most familiar with
+    # using naive bayes classifier here because it is the one I am most familiar with
 
-# this will initalize the actual frequency of all words -->
-# unfortunately they are grabbed as a tuple here, not a dictionary
-# So, Naturally, I have to turn into a dictionary, which is more elegant and fast -->
-# better for models, too!
+    # this will initalize the actual frequency of all words -->
+    # unfortunately they are grabbed as a tuple here, not a dictionary
+    # So, Naturally, I have to turn into a dictionary, which is more elegant and fast -->
+    # better for models, too!
     pos_words_list = grab_all_words(positive_cleaned_tokens_list)
     neg_words_list = grab_all_words(negative_cleaned_tokens_list)
     freq_dist_pos = FreqDist(pos_words_list)
@@ -111,27 +111,26 @@ if __name__ == "__main__":
     negative_model = get_tweets(negative_cleaned_tokens_list)
 
     positive_dataset = [(tweet_dict, "Positive")
-                    for tweet_dict in positive_model]
+                        for tweet_dict in positive_model]
 
     negative_dataset = [(tweet_dict, "Negative")
-                    for tweet_dict in negative_model]
+                        for tweet_dict in negative_model]
 
     dataset = positive_dataset + negative_dataset
 
     random.shuffle(dataset)
 
-# using a lot of input here, there are optimizations that I am going to push in later
+    # using a lot of input here, there are optimizations that I am going to push in later
     train_data = dataset[:10000]
     test_data = dataset[10000:]
 
-# actually going ahead and running it:
+    # actually going ahead and running it:
     classifier = NaiveBayesClassifier.train(train_data)
 
+# testdata_file = open("Recent_Test_Data.txt", "w")
+# testdata_file.write(str(classify.accuracy(classifier, test_data)))
 
-   # testdata_file = open("Recent_Test_Data.txt", "w")
-   # testdata_file.write(str(classify.accuracy(classifier, test_data)))
-
-   # informative_features_file = open("informative_features.txt", "w")
-   # informative_features_file.write(str(classifier.show_most_informative_features(10)))
+# informative_features_file = open("informative_features.txt", "w")
+# informative_features_file.write(str(classifier.show_most_informative_features(10)))
 
 # need to make model static here
