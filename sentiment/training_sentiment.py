@@ -1,8 +1,9 @@
 import nltk
+from nltk import FreqDist
 from nltk.corpus import twitter_samples, stopwords
 from nltk.tag import pos_tag
 from nltk.stem.wordnet import WordNetLemmatizer
-import re, string
+import re, string, random
 
 # using nltk.tag for positve markings here
 # using averaged percepton tagger for token context within sentence
@@ -66,6 +67,7 @@ def rmv_noise(tweet_tokens, stop_wrds=()):
     return cleaned_tokens
 
 
+# use former function to clean our sample words and  such
 positive_tweet_tokens = twitter_samples.tokenized('positive_tweets.json')
 negative_tweet_tokens = twitter_samples.tokenized('negative_tweets.json')
 
@@ -77,5 +79,21 @@ for tokens in positive_tweet_tokens:
 
 for tokens in negative_tweet_tokens:
     negative_cleaned_tokens_list.append(rmv_noise(tokens, stop_wrds))
+
+# using nltk here for word density stuff -->
+# I need to get the actual information about the words before I do anything serious with the model here
+
+def grab_all_words(cleaned_tokens_list):
+    for tokens in cleaned_tokens_list:
+        for token in tokens:
+            yield token
+
+# this will initalize the actual frequency of all words -->
+# unfortunately they are grabbed as a tuple here, not a dictionary
+# So, Naturally, I have to turn into a dictionary, which is more elegant and fast -->
+# better for models, too!
+pos_words_list = grab_all_words(positive_cleaned_tokens_list)
+freq_dist_pos = FreqDist(pos_words_list)
+
 
 
