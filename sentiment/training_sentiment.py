@@ -126,6 +126,7 @@ classifier = NaiveBayesClassifier.train(train_data)
 
 # writing to files takes time, but it is easier for me and future users
 # in the sense that the ability to view visualize pertinent data at this point is very helpful
+
 testdata_file = open("Recent_Test_Data.txt", "w")
 testdata_file.write(classify.accuracy(classifier, test_data))
 
