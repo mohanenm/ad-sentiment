@@ -9,7 +9,7 @@ from nltk.tokenize import word_tokenize
 import pickle
 import pandas as pd
 import training_sentiment as ts
-from tabulate import tabulate
+
 # just doing this to show I have a handle on some basic pandas stuff
 tweet_df = pd.read_csv("data_to_model.csv", delimiter=",")
 tweet_df.head()
@@ -27,7 +27,9 @@ classifier = pickle.load(classifier_pickle)
 tweet_df['sentiment'] = tweet_df['tweet'].map(lambda tweet: classifier.classify(dict([token, True] for token in tweet)))
 classifier_pickle.close()
 
-print(tweet_df['sentiment'].value_counts(normalize=True))
+
+
+
 
 
 
