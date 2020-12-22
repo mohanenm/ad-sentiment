@@ -3,7 +3,7 @@ import os
 
 # coming back to this for memory usage stuff, may also do this is pandas for key components
 
-LOG_FILENAME = 'logging_example.out'
+LOG_FILENAME = 'logging.out'
 logging.basicConfig(filename=LOG_FILENAME,
                     level=logging.DEBUG,
                     )
