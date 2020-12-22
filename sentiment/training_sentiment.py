@@ -1,4 +1,3 @@
-import nltk
 from nltk import FreqDist, classify, NaiveBayesClassifier
 from nltk.corpus import twitter_samples, stopwords
 from nltk.tag import pos_tag
@@ -6,6 +5,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 import re, string, random
 import pandas as pd
+import pickle
 
 
 # on a bit of a time crunch here --> in practice would vectorize forloops and such: will implement later
@@ -133,13 +133,12 @@ if __name__ == "__main__":
     # actually going ahead and running it:
     classifier = NaiveBayesClassifier.train(train_data)
 
-    tweet_df = pd.read_csv("sentiment/data_to_model.csv", delimiter=",")
-    tweet_df.head()
-    tweet_df.columns = ['date-time', 'tweet']
-    tweet_df = tweet_df.drop('date-time', 1)
+    save_classifier = open("naivebayes.pickle","wb")
+    pickle.dump(classifier, save_classifier)
+    save_classifier.close()
 
-    tweet_df['tweet'] = tweet_df['tweet'].map(lambda tweet: rmv_noise(word_tokenize(tweet)))
-    tweet_df['tweet'] =  tweet_df['tweet'].map(lambda tweet: classifier.classify(dict([token, True] for token in tweet)))
 
-    print(tweet_df)
+
+
+
 # need to make model static here
