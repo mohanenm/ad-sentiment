@@ -1,5 +1,7 @@
-## Tweets about 'Uber' since November 2020 are:
+### Tweets about 'Uber' since November 2020 are:
 
-### <span style="color:Red"> 65% Negative </span>
+``` diff
+- 65% Negative 
 
-### <span style="color:Green">35% Positive </span>
++ 35% Positive 
+```
