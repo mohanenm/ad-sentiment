@@ -1,7 +1,7 @@
 import tweepy
 from tweepy import OAuthHandler
 
-###consumer keys here, but not putting those on git
+#consumer keys here, but not putting those on git
 
 
 auth = OAuthHandler(consumer_key, consumer_secret)

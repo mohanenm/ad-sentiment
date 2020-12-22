@@ -3,8 +3,14 @@ from nltk import FreqDist, classify, NaiveBayesClassifier
 from nltk.corpus import twitter_samples, stopwords
 from nltk.tag import pos_tag
 from nltk.stem.wordnet import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
 import re, string, random
+import pandas as pd
 
+
+# on a bit of a time crunch here --> in practice would vectorize forloops and such: will implement later
+# going to implement n-jobs in sklearn after done here
+# dask also is an option here
 
 # print(pos_tag(tweet_tokens[0]))
 
@@ -39,8 +45,8 @@ def rmv_noise(tweet_tokens, stop_wrds=()):
 
     for token, tag in pos_tag(tweet_tokens):
         token = re.sub('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|' \
-                       '(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', token)
-        token = re.sub('(@[A-Za-z0-9_]+)', "", token)
+                       '(?:%[0-9a-fA-F][0-9a-fA-F]))+','', token)
+        token = re.sub("(@[A-Za-z0-9_]+)","", token)
 
         if tag.startswith("NN"):
             pos = 'n'
@@ -127,10 +133,13 @@ if __name__ == "__main__":
     # actually going ahead and running it:
     classifier = NaiveBayesClassifier.train(train_data)
 
-# testdata_file = open("Recent_Test_Data.txt", "w")
-# testdata_file.write(str(classify.accuracy(classifier, test_data)))
+    tweet_df = pd.read_csv("sentiment/data_to_model.csv", delimiter=",")
+    tweet_df.head()
+    tweet_df.columns = ['date-time', 'tweet']
+    tweet_df = tweet_df.drop('date-time', 1)
 
-# informative_features_file = open("informative_features.txt", "w")
-# informative_features_file.write(str(classifier.show_most_informative_features(10)))
+    tweet_df['tweet'] = tweet_df['tweet'].map(lambda tweet: rmv_noise(word_tokenize(tweet)))
+    tweet_df['tweet'] =  tweet_df['tweet'].map(lambda tweet: classifier.classify(dict([token, True] for token in tweet)))
 
+    print(tweet_df)
 # need to make model static here
