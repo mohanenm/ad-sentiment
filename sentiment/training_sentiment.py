@@ -84,14 +84,14 @@ if __name__ == "__main__":
     negative_tweet_tokens = twitter_samples.tokenized('negative_tweets.json')
     stop_wrds = stopwords.words('english')
 
-    # using nltk.tag for positve markings here
-    # using averaged percepton tagger for token context within sentence
+    # using nltk.tag for positive markings here
+    # using averaged perception tagger for token context within sentence
 
     positive_tweets = twitter_samples.strings('positive_tweets.json')
     negative_tweets = twitter_samples.strings('negative_tweets.json')
     text = twitter_samples.strings('tweets.20150430-223406.json')
-    # grabing a little data at first, for the purpose of visualizing it.
-    # Ultimatly training will happen in a larger context
+    # grabbing a little data at first, for the purpose of visualizing it.
+    # Ultimately training will happen in a larger context
     tweet_tokens = twitter_samples.tokenized('positive_tweets.json')[0:1]
 
     positive_cleaned_tokens_list = []
@@ -104,7 +104,7 @@ if __name__ == "__main__":
         negative_cleaned_tokens_list.append(rmv_noise(tokens, stop_wrds))
     # using naive bayes classifier here because it is the one I am most familiar with
 
-    # this will initalize the actual frequency of all words -->
+    # this will initialize the actual frequency of all words -->
     # unfortunately they are grabbed as a tuple here, not a dictionary
     # So, Naturally, I have to turn into a dictionary, which is more elegant and fast -->
     # better for models, too!
@@ -130,6 +130,8 @@ if __name__ == "__main__":
     train_data = dataset[:10000]
     test_data = dataset[10000:]
 
+
+
     # actually going ahead and running it:
     classifier = NaiveBayesClassifier.train(train_data)
 
@@ -137,8 +139,6 @@ if __name__ == "__main__":
     pickle.dump(classifier, save_classifier)
     save_classifier.close()
 
+# DONE: model needs to be made static
 
 
-
-
-# need to make model static here

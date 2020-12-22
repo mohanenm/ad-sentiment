@@ -12,7 +12,7 @@ csvWriter = csv.writer(csvFile)
 # strt_date = input("Start Date(eg., yyyy-mm-dd")
 # end_date = input("End Date(eg., yyyy-mm-dd" )
 
-new_search = "nielsen -filter:retweets"
+new_search = "uber -filter:retweets"
 
 for tweet in tweepy.Cursor(api_auth.api.search,
                            # the check should be
@@ -23,6 +23,7 @@ for tweet in tweepy.Cursor(api_auth.api.search,
                            since="2020-11-20",
                            # using english here, larger scale we would want more accessbility
                            lang="en").items(100):
+                           #lang="en").items(): --> only run this if you have a twitter developer subcription that gives you unlimited queries
     # Write a row to the CSV file. I use encode UTF-8
     csvWriter.writerow([tweet.created_at, tweet.text.encode('utf-8')])
 
