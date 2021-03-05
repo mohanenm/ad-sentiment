@@ -1,3 +1,3 @@
 ## Tweet Sentiment
 
-#### An app for seeing the sentiment of twitter posts pertinent to your company during a certain time period
+#### What is the sentiment about your company on twitter? Find out with here!!!
